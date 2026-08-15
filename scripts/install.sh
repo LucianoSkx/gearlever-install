@@ -15,15 +15,15 @@ c_reset='\033[0m'; c_green='\033[1;32m'; c_yellow='\033[1;33m'; c_red='\033[1;31
 info()  { printf "${c_cyan}[info]${c_reset} %s\n" "$*"; }
 ok()    { printf "${c_green}[ ok ]${c_reset} %s\n" "$*"; }
 warn()  { printf "${c_yellow}[warn]${c_reset} %s\n" "$*"; }
-die()   { printf "${c_red}[erro]${c_reset} %s\n" "$*" >&2; exit 1; }
+die()   { printf "${c_red}[error]${c_reset} %s\n" "$*" >&2; exit 1; }
 
-need_cmd() { command -v "$1" >/dev/null 2>&1 || die "comando não encontrado: $1"; }
+need_cmd() { command -v "$1" >/dev/null 2>&1 || die "command not found: $1"; }
 
 detect_pkg_manager() {
     if   command -v pacman >/dev/null 2>&1; then echo pacman
     elif command -v apt-get >/dev/null 2>&1; then echo apt
     elif command -v dnf    >/dev/null 2>&1; then echo dnf
-    else die "distro não suportada (use Arch, Debian/Ubuntu ou Fedora)"
+    else die "unsupported distro (use Arch, Debian/Ubuntu or Fedora)"
     fi
 }
 
@@ -33,7 +33,7 @@ if [ "$(id -u)" -ne 0 ]; then SUDO="sudo"; fi
 install_deps() {
     local pm
     pm="$(detect_pkg_manager)"
-    info "instalando dependências do sistema via $pm..."
+    info "installing system dependencies via $pm..."
     case "$pm" in
         pacman)
             $SUDO pacman -S --noconfirm --needed \
@@ -56,31 +56,31 @@ install_deps() {
                 gettext gobject-introspection-devel gcc python3-devel dbus-devel
             ;;
     esac
-    ok "dependências instaladas"
+    ok "dependencies installed"
 }
 
 setup_source() {
     if [ -d "$SOURCE_DIR/.git" ]; then
-        info "atualizando source em $SOURCE_DIR..."
-        git -C "$SOURCE_DIR" pull --ff-only --rebase=false origin "$BRANCH" || warn "git pull falhou; continuando com o source atual"
+        info "updating source at $SOURCE_DIR..."
+        git -C "$SOURCE_DIR" pull --ff-only --rebase=false origin "$BRANCH" || warn "git pull failed; continuing with current source"
     else
-        info "clonando gearlever ($BRANCH)..."
+        info "cloning gearlever ($BRANCH)..."
         mkdir -p "$BASE_DIR"
         git clone --depth 1 --branch "$BRANCH" "$GEARLEVER_REPO" "$SOURCE_DIR"
     fi
-    ok "source pronto"
+    ok "source ready"
 }
 
 setup_venv() {
     need_cmd python3
     if [ ! -x "$VENV_DIR/bin/python" ]; then
-        info "criando venv..."
+        info "creating venv..."
         python3 -m venv --system-site-packages "$VENV_DIR"
     fi
-    info "instalando dependências python (pip)..."
+    info "installing python dependencies (pip)..."
     "$VENV_DIR/bin/pip" install --quiet --upgrade pip
     "$VENV_DIR/bin/pip" install --quiet -r "$SOURCE_DIR/requirements.txt"
-    ok "venv pronto"
+    ok "venv ready"
 }
 
 build_app() {
@@ -90,15 +90,15 @@ build_app() {
     export PATH="$VENV_DIR/bin:$PATH"
     cd "$SOURCE_DIR"
     if [ -d "$BUILD_DIR" ]; then
-        info "reconfigurando build..."
+        info "reconfiguring build..."
         meson setup --reconfigure "$BUILD_DIR" --prefix "$PREFIX" >/dev/null
     else
-        info "configurando build..."
+        info "configuring build..."
         meson setup "$BUILD_DIR" --prefix "$PREFIX" >/dev/null
     fi
-    info "compilando..."
+    info "compiling..."
     ninja -C "$BUILD_DIR" >/dev/null
-    info "instalando em $PREFIX..."
+    info "installing to $PREFIX..."
     meson install -C "$BUILD_DIR" >/dev/null 2>&1 || true
     mkdir -p "$PREFIX/bin" "$PREFIX/share/applications" "$PREFIX/share/metainfo" "$PREFIX/share/glib-2.0/schemas"
     cp "$BUILD_DIR/src/gearlever" "$PREFIX/bin/gearlever"
@@ -110,16 +110,16 @@ build_app() {
     update-desktop-database -q "$PREFIX/share/applications" 2>/dev/null || true
     cp "$SOURCE_DIR/build-aux/get_appimage_offset.sh" "$PREFIX/bin/get_appimage_offset"
     chmod +x "$PREFIX/bin/get_appimage_offset"
-    ok "build instalado"
+    ok "build installed"
 }
 
 verify() {
     if ! "$PREFIX/bin/gearlever" --list-installed >/dev/null 2>&1; then
-        die "gearlever não iniciou; verifique as dependências"
+        die "gearlever failed to start; check your dependencies"
     fi
     local ver
     ver="$(grep -A1 "project('gearlever'" "$SOURCE_DIR/meson.build" | grep -oE "version: '[^']+'" | grep -oE "[0-9.]+" || echo "?")"
-    ok "gearlever $ver instalado e funcionando"
+    ok "gearlever $ver installed and working"
 }
 
 main() {
@@ -134,9 +134,9 @@ main() {
     verify
 
     if [[ ":$PATH:" != *":$PREFIX/bin:"* ]]; then
-        warn "$PREFIX/bin não está no seu PATH — adicione: export PATH=\"\$HOME/.local/bin:\$PATH\""
+        warn "$PREFIX/bin is not in your PATH — add: export PATH=\"\$HOME/.local/bin:\$PATH\""
     fi
-    printf "\n${c_green}Pronto!${c_reset} Rode: gearlever\n"
+    printf "\n${c_green}Done!${c_reset} Run: gearlever\n"
 }
 
 main "$@"
