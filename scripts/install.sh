@@ -37,7 +37,7 @@ install_deps() {
     case "$pm" in
         pacman)
             $SUDO pacman -S --noconfirm --needed \
-                meson ninja python python-pip python-gobject python-venv \
+                meson ninja python python-pip python-gobject \
                 gtk4 libadwaita glib2 7zip squashfs-tools desktop-file-utils \
                 gettext gobject-introspection libgirepository gcc dbus
             ;;
