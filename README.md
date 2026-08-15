@@ -1,35 +1,35 @@
 # Gear Lever Install
 
-Instala o **Gear Lever** (gerenciador de AppImages) compilando direto do source oficial — sem Flatpak, sem AUR, sem snap.
+Installs **Gear Lever** (AppImage manager) by compiling it directly from the official source — no Flatpak, no AUR, no snap.
 
-## Instalação (one-liner)
+## Install (one-liner)
 
 ```sh
 bash <(curl -fsSL https://raw.githubusercontent.com/LucianoSkx/gearlever-install/main/scripts/install.sh)
 ```
 
-## O que faz
+## What it does
 
-- Detecta sua distro e instala as dependências de sistema (pacman/apt/dnf)
-- Clona o source oficial do Gear Lever
-- Compila e instala em `~/.local` (sem root)
-- Cria o ícone no menu de aplicativos
-- É idempotente: rodar de novo atualiza o Gear Lever para a versão mais recente
+- Detects your distro and installs system dependencies (pacman/apt/dnf)
+- Clones the official Gear Lever source
+- Compiles and installs to `~/.local` (no root)
+- Adds the app icon to your applications menu
+- Idempotent: run it again to update Gear Lever to the latest version
 
-## Suporte
+## Support
 
-| Distro | Gerenciador |
-|--------|-------------|
+| Distro | Package manager |
+|--------|-----------------|
 | Arch/Manjaro/CachyOS | pacman |
 | Debian/Ubuntu/Mint | apt |
 | Fedora | dnf |
 
-## Requisitos
+## Requirements
 
 - `git`, `curl`, `bash`
-- `~/.local/bin` no seu PATH (adicione `export PATH="$HOME/.local/bin:$PATH"` no seu `~/.bashrc` se necessário)
+- `~/.local/bin` in your PATH (add `export PATH="$HOME/.local/bin:$PATH"` to your `~/.bashrc` if needed)
 
-## Desinstalar
+## Uninstall
 
 ```sh
 rm -rf ~/.local/share/gearlever ~/.local/bin/gearlever ~/.local/bin/get_appimage_offset
@@ -37,10 +37,10 @@ rm ~/.local/share/applications/it.mijorus.gearlever.desktop
 rm ~/.local/share/metainfo/it.mijorus.gearlever.metainfo.xml
 ```
 
-## Como funciona
+## How it works
 
-O projeto oficial do Gear Lever só distribui Flatpak, e o pacote AUR vive desatualizado. Este script compila o source (Python + GTK4 + libadwaita) com meson/ninja em `~/.local`, usando um venv isolado para as dependências Python — as atualizações saem direto do repo oficial.
+The official Gear Lever project only ships Flatpak, and the AUR package is often outdated. This script compiles the source (Python + GTK4 + libadwaita) with meson/ninja into `~/.local`, using an isolated venv for the Python dependencies — updates come straight from the official repo.
 
 ---
 
-Projeto não oficial, não afiliado ao [mijorus/gearlever](https://github.com/mijorus/gearlever).
+Unofficial project, not affiliated with [mijorus/gearlever](https://github.com/mijorus/gearlever).
