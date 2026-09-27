@@ -5,7 +5,7 @@ Installs **Gear Lever** (AppImage manager) by compiling it directly from the off
 ## Install (one-liner)
 
 ```sh
-bash <(curl -fsSL https://raw.githubusercontent.com/LucianoSkx/gearlever-install/main/scripts/install.sh)
+curl -fsSL https://raw.githubusercontent.com/LucianoSkx/gearlever-install/main/scripts/install.sh | bash
 ```
 
 ## What it does
