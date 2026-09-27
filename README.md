@@ -8,6 +8,12 @@ Installs **Gear Lever** (AppImage manager) by compiling it directly from the off
 curl -fsSL https://raw.githubusercontent.com/LucianoSkx/gearlever-install/main/scripts/install.sh | bash
 ```
 
+## Uninstall (one-liner)
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/LucianoSkx/gearlever-install/main/scripts/uninstall.sh | bash -s -- --yes
+```
+
 ## What it does
 
 - Detects your distro and installs system dependencies (pacman/apt/dnf)
@@ -28,14 +34,6 @@ curl -fsSL https://raw.githubusercontent.com/LucianoSkx/gearlever-install/main/s
 
 - `git`, `curl`, `bash`
 - `~/.local/bin` in your PATH (add `export PATH="$HOME/.local/bin:$PATH"` to your `~/.bashrc` if needed)
-
-## Uninstall
-
-```sh
-rm -rf ~/.local/share/gearlever ~/.local/bin/gearlever ~/.local/bin/get_appimage_offset
-rm ~/.local/share/applications/it.mijorus.gearlever.desktop
-rm ~/.local/share/metainfo/it.mijorus.gearlever.metainfo.xml
-```
 
 ## How it works
 
